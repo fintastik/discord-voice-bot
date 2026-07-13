@@ -1,1 +1,25 @@
 .env
+
+dist/
+build/
+*.spec
+
+__pycache__/
+*.pyc
+*.pyo
+
+.idea/
+.vscode/
+*.iml# Секреты
+.env
+
+dist/
+build/
+*.spec
+
+__pycache__/
+*.pyc
+*.pyo
+.idea/
+.vscode/
+*.iml
