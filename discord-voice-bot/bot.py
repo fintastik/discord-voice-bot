@@ -8,11 +8,10 @@ from datetime import datetime
 import yt_dlp
 from dotenv import load_dotenv
 
-load_dotenv()  # Загружаем переменные из файла .env
+load_dotenv()
 
 TOKEN = os.getenv('TOKEN')
 CHANNEL_ID = int(os.getenv('CHANNEL_ID'))
-# Настройки для yt-dlp
 ytdl_format_options = {
     'format': 'bestaudio/best',
     'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
@@ -52,15 +51,11 @@ class YTDLSource(discord.PCMVolumeTransformer):
         return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
 
 
-# ==================== НАСТРОЙКА БОТА ====================
 intents = discord.Intents.default()
 intents.voice_states = True
-# intents.message_content = True   # ЗАКОММЕНТИРУЙТЕ ЭТУ СТРОКУ
-# intents.members = True           # И ЭТУ
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-# Глобальные переменные
 queues = {}
 anti_kick_active = True
 afk_users = {}
@@ -75,20 +70,18 @@ def get_queue(guild_id):
     return queues[guild_id]
 
 
-# ==================== СОБЫТИЯ ====================
 @bot.event
 async def on_ready():
     print(f'✅ Бот {bot.user} запущен!')
     print(f'👤 Имя: {bot.user.name}')
     print(f'🆔 ID: {bot.user.id}')
 
-    # Подключение к каналу
     channel = bot.get_channel(CHANNEL_ID)
     if channel:
         try:
             if not bot.voice_clients:
                 await channel.connect()
-                print(f'🎧 Бот зашёл в канал {channel.name}!')
+                print(f'🎧 Тута{channel.name}!')
         except Exception as e:
             print(f'❌ Ошибка подключения: {e}')
     else:
@@ -126,7 +119,6 @@ async def on_voice_state_update(member, before, after):
                 await member.send(f'🎉 Поздравляю! Ты достиг {leveling[member.id]["level"]} уровня!')
 
 
-# ==================== МУЗЫКАЛЬНЫЕ КОМАНДЫ ====================
 async def play_next(guild_id, voice_client, text_channel):
     queue = get_queue(guild_id)
     if queue:
@@ -333,7 +325,6 @@ async def clear(interaction: discord.Interaction, amount: int):
     await interaction.followup.send(f'🗑️ Удалено {len(deleted)} сообщений')
 
 
-# ==================== РАЗВЛЕЧЕНИЯ ====================
 @bot.tree.command(name='ping', description='Проверить задержку бота')
 async def ping(interaction: discord.Interaction):
     latency = round(bot.latency * 1000)
